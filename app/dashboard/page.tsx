@@ -46,10 +46,10 @@ export default function DashboardPage() {
             value={overview.saldoMensal}
           />
         </Card>
-        <Card subtitle="Depositos - Resgates" title="Guardado">
+        <Card subtitle="Saldo acumulado ate o mes selecionado" title="Guardado">
           <KpiValue tone="accent" value={overview.guardado} />
         </Card>
-        <Card subtitle="Saldo mensal + guardado" title="Saldo Livre">
+        <Card subtitle="Valor em conta no mes selecionado" title="Saldo Livre">
           <KpiValue
             tone={overview.saldoLivre >= 0 ? "brand" : "expense"}
             value={overview.saldoLivre}
@@ -106,8 +106,8 @@ export default function DashboardPage() {
         <section className="mt-4 rounded-xl2 border border-accent/40 bg-accent/10 p-4">
           <h2 className="text-lg font-semibold text-accent">Alerta inteligente</h2>
           <p className="mt-1 text-sm text-zinc-200">
-            As despesas do mes excedem as entradas. Existe reserva guardada para cobrir
-            esta diferenca, se desejarem.
+            O resultado mensal ficou negativo, mas existe saldo guardado em conta para
+            cobrir esta diferenca.
           </p>
         </section>
       ) : null}
