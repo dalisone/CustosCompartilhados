@@ -58,6 +58,22 @@ export function AppShell({ children }: PropsWithChildren) {
     router.replace("/login");
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-bg text-muted">
+        Carregando sessao...
+      </div>
+    );
+  }
+
+  if (!sessionUserId) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-bg text-muted">
+        Redirecionando para login...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-bg text-text">
       <div className="flex w-full">

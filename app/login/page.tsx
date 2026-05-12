@@ -1,14 +1,22 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/session";
+import { signIn, useSessionUserId } from "@/lib/session";
+import { useFinance } from "@/lib/store";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { isLoading } = useFinance();
+  const sessionUserId = useSessionUserId();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (sessionUserId) router.replace("/dashboard");
+  }, [router, sessionUserId, isLoading]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
