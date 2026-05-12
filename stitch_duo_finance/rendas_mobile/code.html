@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unity Wealth - Incomes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#a81e15",
+                    "tertiary": "#ffb4a9",
+                    "primary-fixed": "#f7d8ff",
+                    "on-tertiary": "#690001",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary": "#510072",
+                    "inverse-primary": "#941cc7",
+                    "surface-container-highest": "#353534",
+                    "surface-container-low": "#1c1b1b",
+                    "background": "#131313",
+                    "on-primary-fixed-variant": "#7400a0",
+                    "on-error": "#690005",
+                    "on-secondary": "#003919",
+                    "outline": "#9b8c9e",
+                    "outline-variant": "#4f4253",
+                    "secondary-fixed": "#6bfe9c",
+                    "primary": "#eab2ff",
+                    "primary-fixed-dim": "#eab2ff",
+                    "on-secondary-fixed": "#00210c",
+                    "on-primary-container": "#edb9ff",
+                    "surface-bright": "#3a3939",
+                    "secondary": "#4ae183",
+                    "inverse-on-surface": "#313030",
+                    "surface": "#131313",
+                    "secondary-fixed-dim": "#4ae183",
+                    "surface-container": "#201f1f",
+                    "on-background": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-variant": "#353534",
+                    "primary-container": "#8a05be",
+                    "on-surface": "#e5e2e1",
+                    "on-primary-fixed": "#320047",
+                    "on-tertiary-container": "#ffbbb1",
+                    "on-tertiary-fixed": "#410000",
+                    "on-surface-variant": "#d3c1d5",
+                    "surface-tint": "#eab2ff",
+                    "on-secondary-fixed-variant": "#005228",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-secondary-container": "#00431f",
+                    "surface-container-high": "#2a2a2a",
+                    "tertiary-fixed": "#ffdad5",
+                    "secondary-container": "#06bb63",
+                    "on-tertiary-fixed-variant": "#910807"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "40px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["JetBrains Mono"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "stats-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-md": ["18px", {"lineHeight": "1.5", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "stats-lg": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="font-headline-lg text-headline-lg font-bold text-primary">Unity Wealth</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
+<img alt="Partner profile" data-alt="A professional and sleek portrait of a person against a dark, minimalist background. The lighting is dramatic, highlighting the contours of the face with a cool, modern fintech aesthetic. The overall mood is sophisticated and reliable, using deep charcoal tones and subtle vibrant purple highlights to match the Unity Wealth brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXqemDyGfK60YMklP0HXOpzYZ1Hz4gZX6ZB4aEDhpsGzeUXRZJEd4SwIIOV0dk-Ve20fHIM5OqkXhPZqrwXbfSIMTA04bHOLhWqJV8Ri9UBdFsrUj4HVsje6JZCKCJeaJSQ9b94Oc5PXfh5UVstEE-qAIZ_-jauAVNdNQAYFyOkQeQULQJ9StSupZ77o9ULbF0VNdXtuOK1A__TIAymYwMSoGBgl_bt0LWaxyoaxFetFKsrOL3RYGtkk_fq2t2Tyh9tTkH0hYynoM"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-margin-mobile max-w-md mx-auto">
+<!-- Summary Header -->
+<section class="mb-xl">
+<div class="flex items-center gap-sm mb-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Joint Income Summary</span>
+<div class="h-[2px] flex-grow bg-primary/20"></div>
+</div>
+<div class="glass-card p-lg rounded-xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex flex-col gap-xs">
+<p class="font-title-md text-title-md text-on-surface-variant">Total Monthly</p>
+<h2 class="font-display-lg text-display-lg text-secondary">$12,450.00</h2>
+</div>
+<div class="mt-md flex items-center justify-between">
+<div class="flex items-center gap-xs text-secondary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="trending_up">trending_up</span>
+<span class="font-label-sm text-label-sm">+4.2% vs last month</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border border-background bg-primary-container flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-6 h-6 rounded-full border border-background bg-secondary-container flex items-center justify-center text-[10px] font-bold">AS</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Income Sources List -->
+<section class="space-y-md">
+<div class="flex justify-between items-center mb-sm">
+<h3 class="font-title-md text-title-md text-on-surface font-bold">Income Sources</h3>
+<button class="text-primary font-label-sm text-label-sm flex items-center gap-xs">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                    ADD NEW
+                </button>
+</div>
+<!-- Income Item 1 -->
+<div class="glass-card p-md rounded-xl flex items-center justify-between border-l-2 border-l-primary">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="work">work</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface leading-tight">Primary Salary</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">John's Monthly Pay</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-stats-lg text-stats-lg text-secondary">$6,800</span>
+<div class="flex gap-sm mt-xs">
+<button class="text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="text-on-surface-variant hover:text-error active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Income Item 2 -->
+<div class="glass-card p-md rounded-xl flex items-center justify-between border-l-2 border-l-secondary">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="corporate_fare">corporate_fare</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface leading-tight">Bonus Income</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Alex's Q3 Bonus</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-stats-lg text-stats-lg text-secondary">$4,250</span>
+<div class="flex gap-sm mt-xs">
+<button class="text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="text-on-surface-variant hover:text-error active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Income Item 3 -->
+<div class="glass-card p-md rounded-xl flex items-center justify-between border-l-2 border-l-primary-fixed">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined" data-icon="house">house</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface leading-tight">Rental Unit</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Shared Investment</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-stats-lg text-stats-lg text-secondary">$1,400</span>
+<div class="flex gap-sm mt-xs">
+<button class="text-on-surface-variant hover:text-primary active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button class="text-on-surface-variant hover:text-error active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights Bento Section -->
+<section class="mt-xl grid grid-cols-2 gap-md">
+<div class="glass-card p-md rounded-xl col-span-2">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Shared Stability</p>
+<h4 class="font-title-md text-title-md text-on-surface">Income Health</h4>
+</div>
+<span class="material-symbols-outlined text-secondary" data-icon="verified_user">verified_user</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container to-secondary-container w-[85%]"></div>
+</div>
+<p class="mt-xs font-label-sm text-label-sm text-on-surface-variant">Your joint income covers 240% of fixed expenses.</p>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-4 px-2 bg-surface/80 backdrop-blur-xl border-t border-white/10 z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-sm text-label-sm mt-1">Incomes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">Expenses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="font-label-sm text-label-sm mt-1">Savings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-sm text-label-sm mt-1">Balance</span>
+</a>
+</nav>
+<!-- Side Navigation Bar (Hidden on Mobile, but implemented for completeness based on JSON) -->
+<aside class="hidden md:flex flex-col py-lg px-md h-screen w-64 fixed left-0 top-0 bg-surface border-r border-white/5">
+<div class="mb-xl px-md">
+<div class="font-headline-lg text-headline-lg font-bold text-primary mb-1">Unity Wealth</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Partner Sync Active</p>
+</div>
+<nav class="flex-grow space-y-sm">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-title-md text-title-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary border-r-2 border-primary bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="payments" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-title-md text-title-md font-bold">Incomes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-title-md text-title-md">Expenses</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="font-title-md text-title-md">Savings</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-title-md text-title-md">Balance</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-title-md text-title-md">Reports</span>
+</a>
+</nav>
+<div class="mt-auto space-y-sm">
+<button class="w-full bg-primary-container text-on-primary py-md rounded-xl font-bold flex items-center justify-center gap-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                Add Transaction
+            </button>
+<div class="h-px bg-white/5 my-lg"></div>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-title-md text-title-md">Support</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-title-md text-title-md">Settings</span>
+</a>
+</div>
+</aside>
+</body></html>

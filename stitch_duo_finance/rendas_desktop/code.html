@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Incomes | Unity Wealth</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#a81e15",
+                    "tertiary": "#ffb4a9",
+                    "primary-fixed": "#f7d8ff",
+                    "on-tertiary": "#690001",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary": "#510072",
+                    "inverse-primary": "#941cc7",
+                    "surface-container-highest": "#353534",
+                    "surface-container-low": "#1c1b1b",
+                    "background": "#131313",
+                    "on-primary-fixed-variant": "#7400a0",
+                    "on-error": "#690005",
+                    "on-secondary": "#003919",
+                    "outline": "#9b8c9e",
+                    "outline-variant": "#4f4253",
+                    "secondary-fixed": "#6bfe9c",
+                    "primary": "#eab2ff",
+                    "primary-fixed-dim": "#eab2ff",
+                    "on-secondary-fixed": "#00210c",
+                    "on-primary-container": "#edb9ff",
+                    "surface-bright": "#3a3939",
+                    "secondary": "#4ae183",
+                    "inverse-on-surface": "#313030",
+                    "surface": "#131313",
+                    "secondary-fixed-dim": "#4ae183",
+                    "surface-container": "#201f1f",
+                    "on-background": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-variant": "#353534",
+                    "primary-container": "#8a05be",
+                    "on-surface": "#e5e2e1",
+                    "on-primary-fixed": "#320047",
+                    "on-tertiary-container": "#ffbbb1",
+                    "on-tertiary-fixed": "#410000",
+                    "on-surface-variant": "#d3c1d5",
+                    "surface-tint": "#eab2ff",
+                    "on-secondary-fixed-variant": "#005228",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-secondary-container": "#00431f",
+                    "surface-container-high": "#2a2a2a",
+                    "tertiary-fixed": "#ffdad5",
+                    "secondary-container": "#06bb63",
+                    "on-tertiary-fixed-variant": "#910807"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "40px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["JetBrains Mono"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "stats-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-md": ["18px", {"lineHeight": "1.5", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "stats-lg": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass {
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .bento-card {
+            background: #161616;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color 0.3s ease;
+        }
+        .bento-card:hover {
+            border-color: rgba(138, 5, 190, 0.3);
+        }
+        .joint-indicator {
+            border-top: 2px solid #8A05BE;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- SideNavBar (Desktop Shell) -->
+<aside class="hidden md:flex flex-col py-lg px-md h-screen w-64 fixed left-0 top-0 bg-surface border-r border-white/5 z-50">
+<div class="mb-xl px-2">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Unity Wealth</h1>
+<p class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest mt-1">Partner Sync Active</p>
+</div>
+<nav class="flex-1 space-y-sm">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-title-md text-title-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-primary border-r-2 border-primary hover:bg-white/5 transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-title-md text-title-md">Incomes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-title-md text-title-md">Expenses</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">savings</span>
+<span class="font-title-md text-title-md">Savings</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-title-md text-title-md">Balance</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-title-md text-title-md">Reports</span>
+</a>
+</nav>
+<div class="mt-auto space-y-sm">
+<button class="w-full bg-primary-container text-white py-md px-lg rounded-xl font-title-md text-title-md active:opacity-80 transition-opacity mb-lg">
+                Add Transaction
+            </button>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-title-md text-title-md">Support</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-title-md text-title-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen pb-xl">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 h-16 bg-background/70 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-lg z-40">
+<h2 class="font-title-md text-title-md text-on-surface">Income Management</h2>
+<div class="flex items-center gap-lg">
+<div class="flex gap-md text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">settings</span>
+</div>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden border border-white/10">
+<img alt="Partner profile" class="w-full h-full object-cover" data-alt="A professional headshot of a woman with a confident expression, set against a blurred modern office background. The lighting is soft and cinematic, emphasizing a clean and premium fintech aesthetic. The image is cropped to a circular avatar format for a high-end user profile interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtZSHFrvHK1s0S3HuibD9LEteot2XYEnBQXf9Yl-CHZbC6rbksLU4h8pf781RVPZ3zYRJPmyo2sO4eLQjLsBN4cVIm6t10Q041l-NW3b8p8dLC3GnxJQfpGz10d8cNBfckH7z6UVfU-k0I9kYl70lzShUtGSLB9XbTcUQ9ne9u6pYm8juDGkSSlIH7k3baUC_NnAe5CnnBw3pXJMQw5zgfbAv5keh5RXekZbgdYqTRnonBBUWaBj0GJ19_4qFK_IJQJvgGIYbiVKE"/>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="pt-24 px-lg max-w-container-max mx-auto">
+<!-- Header Section with CTA -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-lg mb-xl">
+<div>
+<h3 class="font-display-lg text-display-lg text-on-surface">Household Incomes</h3>
+<p class="text-on-surface-variant mt-xs">Real-time synchronization across shared accounts.</p>
+</div>
+<button class="bg-primary-container text-white px-xl py-md rounded-xl font-title-md flex items-center gap-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined">add</span>
+                    Add Income Source
+                </button>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Total Monthly Card -->
+<div class="lg:col-span-12 bento-card p-xl rounded-xl glass flex flex-col md:flex-row md:items-center justify-between gap-xl relative overflow-hidden">
+<div class="relative z-10">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest">Aggregate Total</span>
+<div class="text-[64px] font-bold text-on-surface leading-none mt-sm">$14,850.00</div>
+<p class="text-secondary font-title-md mt-md flex items-center gap-xs">
+<span class="material-symbols-outlined">trending_up</span>
+                            +12% vs last month
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-xl md:w-1/3 relative z-10">
+<div>
+<p class="text-on-surface-variant font-label-sm uppercase">Projected</p>
+<p class="font-stats-lg text-stats-lg text-on-surface">$15,200</p>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm uppercase">Taxes Paid</p>
+<p class="font-stats-lg text-stats-lg text-on-surface">$3,120</p>
+</div>
+</div>
+<!-- Decorative background graphic -->
+<div class="absolute right-[-10%] top-[-50%] w-1/2 h-[200%] bg-primary-container/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Partner A Section -->
+<div class="lg:col-span-6 space-y-lg">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface">Partner A</h4>
+</div>
+<span class="font-stats-lg text-stats-lg text-secondary">$8,450.00</span>
+</div>
+<!-- Individual Incomes -->
+<div class="space-y-sm">
+<div class="bento-card p-lg rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div>
+<p class="font-title-md text-on-surface">TechCorp Salary</p>
+<p class="font-label-sm text-on-surface-variant">Monthly • 1st of month</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md text-on-surface">$6,200.00</p>
+<span class="px-sm py-xs bg-secondary/10 text-secondary font-label-sm rounded uppercase">Verified</span>
+</div>
+</div>
+<div class="bento-card p-lg rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">palette</span>
+</div>
+<div>
+<p class="font-title-md text-on-surface">Design Freelance</p>
+<p class="font-label-sm text-on-surface-variant">Varies • Stripe Payout</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md text-on-surface">$2,250.00</p>
+<span class="px-sm py-xs bg-on-surface-variant/10 text-on-surface-variant font-label-sm rounded uppercase">Pending</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Partner B Section -->
+<div class="lg:col-span-6 space-y-lg">
+<div class="flex items-center justify-between px-xs">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person_2</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface">Partner B</h4>
+</div>
+<span class="font-stats-lg text-stats-lg text-secondary">$6,400.00</span>
+</div>
+<!-- Individual Incomes -->
+<div class="space-y-sm">
+<div class="bento-card p-lg rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">medical_services</span>
+</div>
+<div>
+<p class="font-title-md text-on-surface">HealthLink Stipend</p>
+<p class="font-label-sm text-on-surface-variant">Bi-weekly • Thursday</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md text-on-surface">$5,500.00</p>
+<span class="px-sm py-xs bg-secondary/10 text-secondary font-label-sm rounded uppercase">Verified</span>
+</div>
+</div>
+<div class="bento-card p-lg rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">apartment</span>
+</div>
+<div>
+<p class="font-title-md text-on-surface">Rental Property</p>
+<p class="font-label-sm text-on-surface-variant">Monthly • 5th of month</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md text-on-surface">$900.00</p>
+<span class="px-sm py-xs bg-secondary/10 text-secondary font-label-sm rounded uppercase">Verified</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Shared Income Distribution (Bento Extra) -->
+<div class="lg:col-span-8 bento-card p-xl rounded-xl joint-indicator">
+<h5 class="font-title-md text-on-surface mb-lg">Income Distribution Trend</h5>
+<div class="h-48 flex items-end justify-between gap-sm">
+<!-- Simulated Bar Chart -->
+<div class="flex-1 bg-primary/20 rounded-t-sm h-1/2 relative group transition-all hover:bg-primary/40">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-xs font-label-sm opacity-0 group-hover:opacity-100">$7k</div>
+</div>
+<div class="flex-1 bg-primary/30 rounded-t-sm h-3/4 relative group transition-all hover:bg-primary/50"></div>
+<div class="flex-1 bg-primary/25 rounded-t-sm h-2/3 relative group transition-all hover:bg-primary/45"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm h-full relative group transition-all hover:bg-primary/60"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-1/2 relative group transition-all hover:bg-primary/40"></div>
+<div class="flex-1 bg-primary/35 rounded-t-sm h-4/5 relative group transition-all hover:bg-primary/55"></div>
+<div class="flex-1 bg-primary/50 rounded-t-sm h-5/6 relative group transition-all hover:bg-primary/70"></div>
+<div class="flex-1 bg-primary/10 rounded-t-sm h-1/4 relative group transition-all hover:bg-primary/30"></div>
+<div class="flex-1 bg-primary/30 rounded-t-sm h-2/3 relative group transition-all hover:bg-primary/50"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm h-3/4 relative group transition-all hover:bg-primary/60"></div>
+<div class="flex-1 bg-primary/25 rounded-t-sm h-1/2 relative group transition-all hover:bg-primary/40"></div>
+<div class="flex-1 bg-primary-container rounded-t-sm h-full relative group transition-all hover:scale-x-105"></div>
+</div>
+<div class="flex justify-between mt-md font-label-sm text-on-surface-variant uppercase">
+<span>Jan</span>
+<span>Jun</span>
+<span>Dec</span>
+</div>
+</div>
+<!-- Insights Sidebar Card -->
+<div class="lg:col-span-4 bento-card p-xl rounded-xl flex flex-col justify-between">
+<div>
+<h5 class="font-title-md text-on-surface mb-md">Financial Insight</h5>
+<p class="text-on-surface-variant text-body-md">
+                            Your combined income has increased by <span class="text-primary font-bold">12%</span> this quarter. We recommend increasing your 'Joint Travel Fund' contribution by $150/month.
+                        </p>
+</div>
+<div class="mt-xl p-md bg-surface-container-low rounded-lg border border-white/5">
+<div class="flex items-center gap-md text-secondary">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-sm uppercase">Optimize Taxes</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-4 px-2 bg-surface/80 backdrop-blur-xl border-t border-white/10 z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-sm text-label-sm">Incomes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm">Expenses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">savings</span>
+<span class="font-label-sm text-label-sm">Savings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-sm text-label-sm">Balance</span>
+</a>
+</nav>
+</body></html>

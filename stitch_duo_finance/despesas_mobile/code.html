@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#a81e15",
+                    "tertiary": "#ffb4a9",
+                    "primary-fixed": "#f7d8ff",
+                    "on-tertiary": "#690001",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary": "#510072",
+                    "inverse-primary": "#941cc7",
+                    "surface-container-highest": "#353534",
+                    "surface-container-low": "#1c1b1b",
+                    "background": "#131313",
+                    "on-primary-fixed-variant": "#7400a0",
+                    "on-error": "#690005",
+                    "on-secondary": "#003919",
+                    "outline": "#9b8c9e",
+                    "outline-variant": "#4f4253",
+                    "secondary-fixed": "#6bfe9c",
+                    "primary": "#eab2ff",
+                    "primary-fixed-dim": "#eab2ff",
+                    "on-secondary-fixed": "#00210c",
+                    "on-primary-container": "#edb9ff",
+                    "surface-bright": "#3a3939",
+                    "secondary": "#4ae183",
+                    "inverse-on-surface": "#313030",
+                    "surface": "#131313",
+                    "secondary-fixed-dim": "#4ae183",
+                    "surface-container": "#201f1f",
+                    "on-background": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-variant": "#353534",
+                    "primary-container": "#8a05be",
+                    "on-surface": "#e5e2e1",
+                    "on-primary-fixed": "#320047",
+                    "on-tertiary-container": "#ffbbb1",
+                    "on-tertiary-fixed": "#410000",
+                    "on-surface-variant": "#d3c1d5",
+                    "surface-tint": "#eab2ff",
+                    "on-secondary-fixed-variant": "#005228",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-secondary-container": "#00431f",
+                    "surface-container-high": "#2a2a2a",
+                    "tertiary-fixed": "#ffdad5",
+                    "secondary-container": "#06bb63",
+                    "on-tertiary-fixed-variant": "#910807"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "40px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["JetBrains Mono"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "stats-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-md": ["18px", {"lineHeight": "1.5", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "stats-lg": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .expense-row:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        body {
+            background-color: #0B0B0B;
+            color: #e5e2e1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md selection:bg-primary/30">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile h-16 w-full">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Unity Wealth</h1>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant active:opacity-80 transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant active:opacity-80 transition-colors" data-icon="settings">settings</span>
+</div>
+</header>
+<!-- Sidebar (Desktop Hidden - for JSON Compliance) -->
+<aside class="hidden md:flex flex-col py-lg px-md h-screen w-64 fixed left-0 top-0 bg-surface border-r border-white/5 z-40">
+<div class="mb-xl px-md">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary">Unity Wealth</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Partner Sync Active</p>
+</div>
+<nav class="flex-1 space-y-sm">
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-title-md text-title-md">Dashboard</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-title-md text-title-md">Incomes</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm text-primary border-r-2 border-primary bg-white/5">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-title-md text-title-md">Expenses</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-32 px-margin-mobile max-w-container-max mx-auto">
+<!-- Summary Header (Bento Style) -->
+<section class="mb-xl">
+<div class="glass-card rounded-xl p-lg border-t-2 border-primary">
+<div class="flex justify-between items-start mb-md">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Monthly Outflow</p>
+<h2 class="font-display-lg text-display-lg mt-xs">$4,120.45</h2>
+</div>
+<div class="bg-primary/10 px-md py-sm rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="trending_up">trending_up</span>
+<span class="font-label-sm text-label-sm text-primary">12% vs last month</span>
+</div>
+</div>
+<!-- Quick Insight Progress -->
+<div class="space-y-sm">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Household Budget Used</span>
+<span class="text-on-surface">82%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container to-primary" style="width: 82%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Transaction Feed -->
+<section class="space-y-lg">
+<div class="flex justify-between items-center px-xs">
+<h3 class="font-title-md text-title-md">Recent Transactions</h3>
+<span class="font-label-sm text-label-sm text-primary">View All</span>
+</div>
+<!-- Date Header -->
+<div class="space-y-md">
+<p class="font-label-sm text-label-sm text-on-surface-variant px-xs">TODAY, OCT 24</p>
+<div class="glass-card rounded-xl overflow-hidden">
+<!-- Row 1 -->
+<div class="expense-row p-md flex items-center gap-md active:bg-white/5 transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+</div>
+<div class="flex-1">
+<p class="font-title-md text-title-md leading-tight">Wildwood Bistro</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Shared Dining • 7:14 PM</p>
+</div>
+<div class="text-right">
+<p class="font-title-md text-title-md text-error">-$84.20</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Card • 4492</p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="expense-row p-md flex items-center gap-md active:bg-white/5 transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="local_grocery_store">local_grocery_store</span>
+</div>
+<div class="flex-1">
+<p class="font-title-md text-title-md leading-tight">Whole Foods Market</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Groceries • 2:45 PM</p>
+</div>
+<div class="text-right">
+<p class="font-title-md text-title-md text-error">-$126.50</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Shared Account</p>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-md">
+<p class="font-label-sm text-label-sm text-on-surface-variant px-xs">YESTERDAY, OCT 23</p>
+<div class="glass-card rounded-xl overflow-hidden">
+<!-- Row 3 -->
+<div class="expense-row p-md flex items-center gap-md active:bg-white/5 transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+</div>
+<div class="flex-1">
+<p class="font-title-md text-title-md leading-tight">Tesla Supercharger</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Transport • 11:30 AM</p>
+</div>
+<div class="text-right">
+<p class="font-title-md text-title-md text-error">-$22.00</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Personal</p>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="expense-row p-md flex items-center gap-md active:bg-white/5 transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+</div>
+<div class="flex-1">
+<p class="font-title-md text-title-md leading-tight">Modern Rent Co.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Housing • 09:00 AM</p>
+</div>
+<div class="text-right">
+<p class="font-title-md text-title-md text-error">-$2,400.00</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Scheduled</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Category Insights -->
+<section class="mt-xl grid grid-cols-2 gap-md">
+<div class="glass-card rounded-xl p-md">
+<span class="material-symbols-outlined text-primary text-xl mb-sm" data-icon="bar_chart">bar_chart</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Top Category</p>
+<p class="font-title-md text-title-md">Housing</p>
+<p class="font-label-sm text-label-sm text-error mt-xs">$2,400</p>
+</div>
+<div class="glass-card rounded-xl p-md">
+<span class="material-symbols-outlined text-secondary text-xl mb-sm" data-icon="savings">savings</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Potential Saving</p>
+<p class="font-title-md text-title-md">Subscriptions</p>
+<p class="font-label-sm text-label-sm text-secondary mt-xs">+$45.00</p>
+</div>
+</section>
+</main>
+<!-- Fast 'Add Expense' FAB -->
+<button class="fixed right-margin-mobile bottom-24 w-16 h-16 bg-primary-container text-on-primary rounded-full shadow-lg flex items-center justify-center z-[60] active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined text-3xl" data-icon="add" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-4 px-2 bg-surface/80 backdrop-blur-xl border-t border-white/10 z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label-sm text-label-sm mt-1">Incomes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-sm text-label-sm mt-1">Expenses</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="savings">savings</span>
+<span class="font-label-sm text-label-sm mt-1">Savings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-sm text-label-sm mt-1">Balance</span>
+</a>
+</nav>
+</body></html>

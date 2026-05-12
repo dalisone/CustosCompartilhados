@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unity Wealth - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#a81e15",
+                    "tertiary": "#ffb4a9",
+                    "primary-fixed": "#f7d8ff",
+                    "on-tertiary": "#690001",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "surface-container-lowest": "#0e0e0e",
+                    "on-primary": "#510072",
+                    "inverse-primary": "#941cc7",
+                    "surface-container-highest": "#353534",
+                    "surface-container-low": "#1c1b1b",
+                    "background": "#131313",
+                    "on-primary-fixed-variant": "#7400a0",
+                    "on-error": "#690005",
+                    "on-secondary": "#003919",
+                    "outline": "#9b8c9e",
+                    "outline-variant": "#4f4253",
+                    "secondary-fixed": "#6bfe9c",
+                    "primary": "#eab2ff",
+                    "primary-fixed-dim": "#eab2ff",
+                    "on-secondary-fixed": "#00210c",
+                    "on-primary-container": "#edb9ff",
+                    "surface-bright": "#3a3939",
+                    "secondary": "#4ae183",
+                    "inverse-on-surface": "#313030",
+                    "surface": "#131313",
+                    "secondary-fixed-dim": "#4ae183",
+                    "surface-container": "#201f1f",
+                    "on-background": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-variant": "#353534",
+                    "primary-container": "#8a05be",
+                    "on-surface": "#e5e2e1",
+                    "on-primary-fixed": "#320047",
+                    "on-tertiary-container": "#ffbbb1",
+                    "on-tertiary-fixed": "#410000",
+                    "on-surface-variant": "#d3c1d5",
+                    "surface-tint": "#eab2ff",
+                    "on-secondary-fixed-variant": "#005228",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-secondary-container": "#00431f",
+                    "surface-container-high": "#2a2a2a",
+                    "tertiary-fixed": "#ffdad5",
+                    "secondary-container": "#06bb63",
+                    "on-tertiary-fixed-variant": "#910807"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "40px",
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "md": "16px",
+                    "gutter": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["JetBrains Mono"],
+                    "title-md": ["Inter"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "stats-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "title-md": ["18px", {"lineHeight": "1.5", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "stats-lg": ["24px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .shared-border {
+            border-top: 2px solid #8A05BE;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="font-headline-lg text-headline-lg font-bold text-primary">Unity Wealth</div>
+<div class="flex items-center gap-4">
+<button class="active:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="active:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10">
+<img alt="Partner profile" data-alt="A professional high-resolution avatar of a young woman with a friendly expression, captured in a minimalist digital art style. The portrait features clean lines and a soft, muted color palette dominated by deep charcoals and subtle purple accents, consistent with a high-end fintech app interface. The lighting is soft and studio-quality, emphasizing a modern and trustworthy professional persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5LvJFL84UmSf0ujAoLhDGd-7f8-qsQauzqDysCFKxjTTWtPPjXdBtcngyurMaiq_nnwqmeeqTEUnFRe5Ub5LNWq1KBXE2CTk78z5qwhrtz4K29eHijXrYYEFfijC-FsWJwjHSrVGOaGtQ2j4aJmhF64ucw-EOKYYeuH_ZcVeMwHafBQ1KbHL1eE9bdAaKj-2UEgAhE9jILBAjVp0MAdzuylIphY-Qj4U8b9vUgxgAaJGkBVRSREvXdrqM4MSEUiahoofdvb8tAjg"/>
+</div>
+</div>
+</header>
+<main class="mt-20 px-margin-mobile space-y-md">
+<!-- Hero Section: Shared Balance -->
+<div class="pt-4">
+<div class="flex items-center gap-2 mb-2">
+<span class="font-label-sm text-label-sm text-primary">PARTNER SYNC ACTIVE</span>
+<div class="h-1.5 w-1.5 rounded-full bg-secondary"></div>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile">Shared Household</h1>
+</div>
+<!-- Balance Bento Grid -->
+<section class="grid grid-cols-1 gap-md">
+<div class="glass-card shared-border p-md rounded-xl">
+<div class="flex justify-between items-start mb-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant">TOTAL BALANCE</span>
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div class="font-display-lg text-display-lg">$42,850.24</div>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label-sm text-label-sm">+12.5% this month</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="glass-card p-md rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-xs">SAVINGS</span>
+<div class="font-stats-lg text-stats-lg">$12,400</div>
+<div class="w-full bg-[#222222] h-1 rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container to-primary" style="width: 65%;"></div>
+</div>
+</div>
+<div class="glass-card p-md rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-xs">EXPENSES</span>
+<div class="font-stats-lg text-stats-lg">$3,240</div>
+<div class="w-full bg-[#222222] h-1 rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-error" style="width: 42%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Compensation Summary -->
+<section class="glass-card p-md rounded-xl">
+<h2 class="font-title-md text-title-md mb-md">Shared Contribution</h2>
+<div class="space-y-md">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<div>
+<p class="font-title-md text-title-md leading-none">Alex</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">45% Shared</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md text-title-md">$4,500</p>
+<p class="font-label-sm text-label-sm text-secondary">Paid</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">person_4</span>
+</div>
+<div>
+<p class="font-title-md text-title-md leading-none">Sam</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">55% Shared</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-title-md text-title-md">$5,500</p>
+<p class="font-label-sm text-label-sm text-secondary">Paid</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Transactions -->
+<section class="space-y-sm">
+<div class="flex justify-between items-center">
+<h2 class="font-title-md text-title-md">Recent Transactions</h2>
+<button class="font-label-sm text-label-sm text-primary uppercase">View All</button>
+</div>
+<div class="glass-card rounded-xl overflow-hidden divide-y divide-white/5">
+<div class="flex justify-between items-center p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">shopping_cart</span>
+</div>
+<div>
+<p class="font-title-md text-title-md leading-none">Whole Foods</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Grocery • 2h ago</p>
+</div>
+</div>
+<div class="text-error font-title-md">-$142.50</div>
+</div>
+<div class="flex justify-between items-center p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">electric_bolt</span>
+</div>
+<div>
+<p class="font-title-md text-title-md leading-none">Utility Bill</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Housing • Yesterday</p>
+</div>
+</div>
+<div class="text-error font-title-md">-$85.00</div>
+</div>
+<div class="flex justify-between items-center p-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">payments</span>
+</div>
+<div>
+<p class="font-title-md text-title-md leading-none">Dividend Payout</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Investment • 2 days ago</p>
+</div>
+</div>
+<div class="text-secondary font-title-md">+$320.00</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (Active on Dashboard) -->
+<button class="fixed right-6 bottom-28 w-14 h-14 bg-primary-container rounded-full shadow-lg flex items-center justify-center text-white active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-20 pb-4 px-2 bg-surface/80 backdrop-blur-xl border-t border-white/10 z-50">
+<button class="flex flex-col items-center justify-center text-primary active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-sm text-label-sm">Incomes</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm">Expenses</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">savings</span>
+<span class="font-label-sm text-label-sm">Savings</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-sm text-label-sm">Balance</span>
+</button>
+</nav>
+</body></html>
