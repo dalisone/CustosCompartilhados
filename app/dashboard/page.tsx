@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { AppShell, Card } from "@/components/app-shell";
 import { buildUserBalances, calculateCompensation, currencyFormatter, monthlyOverview } from "@/lib/finance";
 import { useFinance } from "@/lib/store";
@@ -26,10 +27,38 @@ function KpiValue({
 }
 
 export default function DashboardPage() {
-  const { state } = useFinance();
+  const { state, addSavings, sessionUserId } = useFinance();
+  const [saving, setSaving] = useState(false);
   const overview = monthlyOverview(state);
   const balances = buildUserBalances(state);
   const transfers = calculateCompensation(state);
+
+  async function handleAplicarSaldoMensalNoGuardado() {
+    if (!sessionUserId || saving) return;
+    if (overview.saldoMensal <= 0) {
+      window.alert("Nao ha sobra mensal positiva para adicionar ao guardado.");
+      return;
+    }
+
+    const marcadorMes = `Aporte automatico saldo mensal ${state.selectedMonth}`;
+    const jaAplicado = state.savingsTransactions.some(
+      (tx) => tx.userId === sessionUserId && tx.descricao === marcadorMes,
+    );
+
+    if (jaAplicado) {
+      window.alert("A sobra mensal deste mes ja foi aplicada ao guardado.");
+      return;
+    }
+
+    setSaving(true);
+    await addSavings({
+      userId: sessionUserId,
+      tipo: "deposito",
+      valor: Number(overview.saldoMensal.toFixed(2)),
+      descricao: marcadorMes,
+    });
+    setSaving(false);
+  }
 
   return (
     <AppShell>
@@ -46,10 +75,18 @@ export default function DashboardPage() {
             value={overview.saldoMensal}
           />
         </Card>
-        <Card subtitle="Saldo acumulado ate o mes selecionado" title="Guardado">
+        <Card subtitle="Saldo atual em conta (depositos - resgates)" title="Guardado">
           <KpiValue tone="accent" value={overview.guardado} />
+          <button
+            className="mt-4 w-full rounded-md border border-accent/40 bg-accent/15 px-3 py-2 text-sm font-semibold text-accent transition hover:bg-accent/25 disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={saving || overview.saldoMensal <= 0}
+            onClick={() => void handleAplicarSaldoMensalNoGuardado()}
+            type="button"
+          >
+            {saving ? "Aplicando..." : "Colocar saldo mensal no guardado"}
+          </button>
         </Card>
-        <Card subtitle="Valor em conta no mes selecionado" title="Saldo Livre">
+        <Card subtitle="Saldo mensal + guardado" title="Saldo Livre">
           <KpiValue
             tone={overview.saldoLivre >= 0 ? "brand" : "expense"}
             value={overview.saldoLivre}

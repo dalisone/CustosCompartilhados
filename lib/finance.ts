@@ -88,16 +88,6 @@ export function savingsBalance(transactions: SavingsTransaction[]): number {
   }, 0);
 }
 
-export function savingsBalanceUntilMonth(
-  transactions: SavingsTransaction[],
-  month: string,
-): number {
-  const monthEnd = `${month}-31`;
-  return transactions
-    .filter((tx) => tx.createdAt.slice(0, 10) <= monthEnd)
-    .reduce((acc, tx) => (tx.tipo === "deposito" ? acc + tx.valor : acc - tx.valor), 0);
-}
-
 export function buildUserBalances(state: FinanceState): UserBalance[] {
   const monthIncomes = resolveMonthIncomes(state.incomes, state.selectedMonth);
   const monthExpenses = resolveMonthExpenses(state.expenses, state.selectedMonth);
@@ -163,8 +153,8 @@ export function monthlyOverview(state: FinanceState) {
   const entradas = totalAmount(monthIncomes);
   const saidas = totalAmount(monthExpenses);
   const saldoMensal = entradas - saidas;
-  const guardado = savingsBalanceUntilMonth(state.savingsTransactions, state.selectedMonth);
-  const saldoLivre = guardado;
+  const guardado = savingsBalance(state.savingsTransactions);
+  const saldoLivre = saldoMensal + guardado;
 
   return {
     entradas,
