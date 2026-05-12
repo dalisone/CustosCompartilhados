@@ -2,13 +2,12 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSessionUserIdClient, signIn, useSessionUserId } from "@/lib/session";
+import { getSessionUserIdClient, signIn } from "@/lib/session";
 import { useFinance } from "@/lib/store";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { isLoading } = useFinance();
-  const sessionUserId = useSessionUserId();
+  const { isLoading, sessionUserId } = useFinance();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");

@@ -225,6 +225,7 @@ export function FinanceProvider({ children }: PropsWithChildren) {
 
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       const nextUserId = session?.user?.id ?? null;
+      setIsLoading(true);
       setSessionUserId(nextUserId);
       setTimeout(() => {
         void loadAllData(nextUserId);
