@@ -11,7 +11,15 @@ import {
 } from "react";
 import { toMonth } from "@/lib/finance";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase";
-import { Expense, FinanceState, Income, SavingsTransaction, User } from "@/lib/types";
+import {
+  Envelope,
+  EnvelopeTransaction,
+  Expense,
+  FinanceState,
+  Income,
+  SavingsTransaction,
+  User,
+} from "@/lib/types";
 
 interface FinanceContextValue {
   state: FinanceState;
@@ -30,6 +38,13 @@ interface FinanceContextValue {
     input: Omit<SavingsTransaction, "id" | "createdAt">,
   ) => Promise<void>;
   deleteSavings: (id: string) => Promise<void>;
+  addEnvelope: (input: Omit<Envelope, "id" | "ativo">) => Promise<void>;
+  updateEnvelope: (id: string, input: Omit<Envelope, "id" | "ativo">) => Promise<void>;
+  deleteEnvelope: (id: string) => Promise<void>;
+  addEnvelopeTransaction: (
+    input: Omit<EnvelopeTransaction, "id" | "createdAt">,
+  ) => Promise<void>;
+  deleteEnvelopeTransaction: (id: string) => Promise<void>;
   setMonth: (month: string) => void;
   updateCurrentUserName: (nome: string) => Promise<void>;
 }
@@ -72,11 +87,34 @@ type ProfileRow = {
   email: string;
 };
 
+type EnvelopeRow = {
+  id: string;
+  user_id: string;
+  nome: string;
+  descricao: string;
+  expense_id: string | null;
+  meta_valor: number | null;
+  data_inicio: string;
+  ativo: boolean;
+};
+
+type EnvelopeTransactionRow = {
+  id: string;
+  envelope_id: string;
+  valor: number;
+  tipo: "gasto" | "deposito" | "resgate";
+  descricao: string;
+  data: string;
+  created_at: string;
+};
+
 const initialState: FinanceState = {
   users: [],
   incomes: [],
   expenses: [],
   savingsTransactions: [],
+  envelopes: [],
+  envelopeTransactions: [],
   selectedMonth: toMonth(),
 };
 
@@ -118,6 +156,31 @@ function mapSavingsRow(row: SavingsRow): SavingsTransaction {
   };
 }
 
+function mapEnvelopeRow(row: EnvelopeRow): Envelope {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    nome: row.nome,
+    descricao: row.descricao,
+    expenseId: row.expense_id,
+    metaValor: row.meta_valor === null ? null : Number(row.meta_valor),
+    dataInicio: row.data_inicio,
+    ativo: row.ativo,
+  };
+}
+
+function mapEnvelopeTransactionRow(row: EnvelopeTransactionRow): EnvelopeTransaction {
+  return {
+    id: row.id,
+    envelopeId: row.envelope_id,
+    valor: Number(row.valor),
+    tipo: row.tipo,
+    descricao: row.descricao,
+    data: row.data,
+    createdAt: row.created_at,
+  };
+}
+
 function toDateOnly(value: string): string {
   return value.length >= 10 ? value.slice(0, 10) : value;
 }
@@ -137,6 +200,8 @@ export function FinanceProvider({ children }: PropsWithChildren) {
         incomes: [],
         expenses: [],
         savingsTransactions: [],
+        envelopes: [],
+        envelopeTransactions: [],
       }));
       setIsLoading(false);
       return;
@@ -149,6 +214,8 @@ export function FinanceProvider({ children }: PropsWithChildren) {
         incomes: [],
         expenses: [],
         savingsTransactions: [],
+        envelopes: [],
+        envelopeTransactions: [],
       }));
       setIsLoading(false);
       return;
@@ -157,15 +224,21 @@ export function FinanceProvider({ children }: PropsWithChildren) {
     setIsLoading(true);
     const supabase = getSupabaseClient();
 
-    const [profilesRes, incomesRes, expensesRes, savingsRes] = await Promise.all([
-      supabase.from("profiles").select("id,nome,email").order("nome", { ascending: true }),
-      supabase.from("incomes").select("*").order("data_inicio", { ascending: false }),
-      supabase.from("expenses").select("*").order("data_referencia", { ascending: false }),
-      supabase
-        .from("savings_transactions")
-        .select("*")
-        .order("created_at", { ascending: false }),
-    ]);
+    const [profilesRes, incomesRes, expensesRes, savingsRes, envelopesRes, envelopeTxRes] =
+      await Promise.all([
+        supabase.from("profiles").select("id,nome,email").order("nome", { ascending: true }),
+        supabase.from("incomes").select("*").order("data_inicio", { ascending: false }),
+        supabase.from("expenses").select("*").order("data_referencia", { ascending: false }),
+        supabase
+          .from("savings_transactions")
+          .select("*")
+          .order("created_at", { ascending: false }),
+        supabase.from("envelopes").select("*").order("created_at", { ascending: true }),
+        supabase
+          .from("envelope_transactions")
+          .select("*")
+          .order("data", { ascending: false }),
+      ]);
 
     if (profilesRes.error || incomesRes.error || expensesRes.error || savingsRes.error) {
       setState((prev) => ({
@@ -174,6 +247,8 @@ export function FinanceProvider({ children }: PropsWithChildren) {
         incomes: [],
         expenses: [],
         savingsTransactions: [],
+        envelopes: [],
+        envelopeTransactions: [],
       }));
       setIsLoading(false);
       return;
@@ -189,6 +264,14 @@ export function FinanceProvider({ children }: PropsWithChildren) {
     const savingsTransactions: SavingsTransaction[] = (savingsRes.data as SavingsRow[]).map(
       mapSavingsRow,
     );
+    // Tolerante a erro: se as tabelas de caixinhas ainda nao foram criadas no
+    // Supabase, o restante do app continua funcionando normalmente.
+    const envelopes: Envelope[] = envelopesRes.error
+      ? []
+      : (envelopesRes.data as EnvelopeRow[]).map(mapEnvelopeRow);
+    const envelopeTransactions: EnvelopeTransaction[] = envelopeTxRes.error
+      ? []
+      : (envelopeTxRes.data as EnvelopeTransactionRow[]).map(mapEnvelopeTransactionRow);
 
     setState((prev) => ({
       ...prev,
@@ -196,6 +279,8 @@ export function FinanceProvider({ children }: PropsWithChildren) {
       incomes,
       expenses,
       savingsTransactions,
+      envelopes,
+      envelopeTransactions,
     }));
     setIsLoading(false);
   }, []);
@@ -429,6 +514,114 @@ export function FinanceProvider({ children }: PropsWithChildren) {
     }
   }, []);
 
+  const addEnvelope = useCallback(async (input: Omit<Envelope, "id" | "ativo">) => {
+    if (!isSupabaseConfigured) return;
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase
+      .from("envelopes")
+      .insert({
+        user_id: input.userId,
+        nome: input.nome,
+        descricao: input.descricao,
+        expense_id: input.expenseId,
+        meta_valor: input.metaValor,
+        data_inicio: toDateOnly(input.dataInicio),
+        ativo: true,
+      })
+      .select("*")
+      .single();
+
+    if (!error && data) {
+      setState((prev) => ({ ...prev, envelopes: [...prev.envelopes, mapEnvelopeRow(data)] }));
+    }
+  }, []);
+
+  const updateEnvelope = useCallback(
+    async (id: string, input: Omit<Envelope, "id" | "ativo">) => {
+      if (!isSupabaseConfigured) return;
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from("envelopes")
+        .update({
+          user_id: input.userId,
+          nome: input.nome,
+          descricao: input.descricao,
+          expense_id: input.expenseId,
+          meta_valor: input.metaValor,
+          data_inicio: toDateOnly(input.dataInicio),
+          ativo: true,
+        })
+        .eq("id", id)
+        .select("*")
+        .single();
+
+      if (!error && data) {
+        const mapped = mapEnvelopeRow(data);
+        setState((prev) => ({
+          ...prev,
+          envelopes: prev.envelopes.map((item) => (item.id === id ? mapped : item)),
+        }));
+      }
+    },
+    [],
+  );
+
+  const deleteEnvelope = useCallback(async (id: string) => {
+    if (!isSupabaseConfigured) return;
+    const supabase = getSupabaseClient();
+    const { error } = await supabase.from("envelopes").delete().eq("id", id);
+    if (!error) {
+      setState((prev) => ({
+        ...prev,
+        envelopes: prev.envelopes.filter((item) => item.id !== id),
+        envelopeTransactions: prev.envelopeTransactions.filter(
+          (item) => item.envelopeId !== id,
+        ),
+      }));
+    }
+  }, []);
+
+  const addEnvelopeTransaction = useCallback(
+    async (input: Omit<EnvelopeTransaction, "id" | "createdAt">) => {
+      if (!isSupabaseConfigured) return;
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from("envelope_transactions")
+        .insert({
+          envelope_id: input.envelopeId,
+          valor: input.valor,
+          tipo: input.tipo,
+          descricao: input.descricao,
+          data: toDateOnly(input.data),
+        })
+        .select("*")
+        .single();
+
+      if (!error && data) {
+        setState((prev) => ({
+          ...prev,
+          envelopeTransactions: [
+            mapEnvelopeTransactionRow(data),
+            ...prev.envelopeTransactions,
+          ],
+        }));
+      }
+    },
+    [],
+  );
+
+  const deleteEnvelopeTransaction = useCallback(async (id: string) => {
+    if (!isSupabaseConfigured) return;
+    const supabase = getSupabaseClient();
+    const { error } = await supabase.from("envelope_transactions").delete().eq("id", id);
+    if (!error) {
+      setState((prev) => ({
+        ...prev,
+        envelopeTransactions: prev.envelopeTransactions.filter((item) => item.id !== id),
+      }));
+    }
+  }, []);
+
   const setMonth = useCallback((month: string) => {
     setState((prev) => ({ ...prev, selectedMonth: month }));
   }, []);
@@ -473,6 +666,11 @@ export function FinanceProvider({ children }: PropsWithChildren) {
       addSavings,
       updateSavings,
       deleteSavings,
+      addEnvelope,
+      updateEnvelope,
+      deleteEnvelope,
+      addEnvelopeTransaction,
+      deleteEnvelopeTransaction,
       setMonth,
       updateCurrentUserName,
     }),
@@ -490,6 +688,11 @@ export function FinanceProvider({ children }: PropsWithChildren) {
       addSavings,
       updateSavings,
       deleteSavings,
+      addEnvelope,
+      updateEnvelope,
+      deleteEnvelope,
+      addEnvelopeTransaction,
+      deleteEnvelopeTransaction,
       setMonth,
       updateCurrentUserName,
     ],

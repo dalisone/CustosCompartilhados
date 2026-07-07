@@ -40,11 +40,36 @@ export interface SavingsTransaction {
   createdAt: string;
 }
 
+export type EnvelopeTransactionType = "gasto" | "deposito" | "resgate";
+
+export interface Envelope {
+  id: string;
+  userId: string;
+  nome: string;
+  descricao: string;
+  expenseId: string | null;
+  metaValor: number | null;
+  dataInicio: string;
+  ativo: boolean;
+}
+
+export interface EnvelopeTransaction {
+  id: string;
+  envelopeId: string;
+  valor: number;
+  tipo: EnvelopeTransactionType;
+  descricao: string;
+  data: string;
+  createdAt: string;
+}
+
 export interface FinanceState {
   users: User[];
   incomes: Income[];
   expenses: Expense[];
   savingsTransactions: SavingsTransaction[];
+  envelopes: Envelope[];
+  envelopeTransactions: EnvelopeTransaction[];
   selectedMonth: string;
 }
 

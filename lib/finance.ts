@@ -1,5 +1,7 @@
 import {
   Compensation,
+  Envelope,
+  EnvelopeTransaction,
   Expense,
   FinanceState,
   Income,
@@ -75,6 +77,95 @@ export function getParcelaInfo(expense: Expense, month: string) {
 
   const parcelaAtual = Math.min(elapsed + 1, expense.quantidadeParcelas);
   return `${parcelaAtual}/${expense.quantidadeParcelas} parcelas`;
+}
+
+function addMonths(month: string, delta: number): string {
+  const [year, monthNumber] = month.split("-").map(Number);
+  const total = year * 12 + (monthNumber - 1) + delta;
+  const nextYear = Math.floor(total / 12);
+  const nextMonth = (total % 12) + 1;
+  return `${nextYear}-${String(nextMonth).padStart(2, "0")}`;
+}
+
+export interface EnvelopeSummary {
+  aporteMes: number;
+  depositosMes: number;
+  gastosMes: number;
+  resgatesMes: number;
+  saldoAnterior: number;
+  saldoAtual: number;
+  livreParaResgate: number;
+}
+
+// O aporte automatico de cada mes e o valor da despesa vinculada, contando a
+// partir do mes de inicio da caixinha. A sobra de meses anteriores e o unico
+// valor livre para resgate: o aporte do mes corrente e reservado ate virar o mes.
+export function buildEnvelopeSummary(
+  envelope: Envelope,
+  linkedExpense: Expense | null,
+  transactions: EnvelopeTransaction[],
+  month: string,
+): EnvelopeSummary {
+  const startMonth = envelope.dataInicio.slice(0, 7);
+
+  let aporteAnterior = 0;
+  let aporteMes = 0;
+  if (linkedExpense) {
+    let cursor = startMonth;
+    for (let i = 0; cursor <= month && i < 600; i += 1) {
+      const active = isEntryActiveInMonth(
+        linkedExpense.recorrencia,
+        linkedExpense.dataReferencia,
+        cursor,
+        linkedExpense.ativo,
+        linkedExpense.quantidadeParcelas,
+      );
+      if (active) {
+        if (cursor === month) aporteMes += linkedExpense.valor;
+        else aporteAnterior += linkedExpense.valor;
+      }
+      cursor = addMonths(cursor, 1);
+    }
+  }
+
+  let depositosAnteriores = 0;
+  let gastosAnteriores = 0;
+  let resgatesAnteriores = 0;
+  let depositosMes = 0;
+  let gastosMes = 0;
+  let resgatesMes = 0;
+
+  for (const tx of transactions) {
+    if (tx.envelopeId !== envelope.id) continue;
+    const txMonth = tx.data.slice(0, 7);
+    if (txMonth > month) continue;
+    const isCurrent = txMonth === month;
+    if (tx.tipo === "deposito") {
+      if (isCurrent) depositosMes += tx.valor;
+      else depositosAnteriores += tx.valor;
+    } else if (tx.tipo === "gasto") {
+      if (isCurrent) gastosMes += tx.valor;
+      else gastosAnteriores += tx.valor;
+    } else {
+      if (isCurrent) resgatesMes += tx.valor;
+      else resgatesAnteriores += tx.valor;
+    }
+  }
+
+  const saldoAnterior =
+    aporteAnterior + depositosAnteriores - gastosAnteriores - resgatesAnteriores;
+  const saldoAtual = saldoAnterior + aporteMes + depositosMes - gastosMes - resgatesMes;
+  const livreParaResgate = Math.max(0, Math.min(saldoAnterior - resgatesMes, saldoAtual));
+
+  return {
+    aporteMes,
+    depositosMes,
+    gastosMes,
+    resgatesMes,
+    saldoAnterior,
+    saldoAtual,
+    livreParaResgate,
+  };
 }
 
 export function totalAmount(values: Array<{ valor: number }>): number {

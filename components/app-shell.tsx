@@ -10,6 +10,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/rendas", label: "Rendas" },
   { href: "/despesas", label: "Despesas" },
+  { href: "/caixinhas", label: "Caixinhas" },
   { href: "/guardado", label: "Guardado" },
   { href: "/equilibrio", label: "Equilibrio" },
   { href: "/relatorios", label: "Relatorios" },
