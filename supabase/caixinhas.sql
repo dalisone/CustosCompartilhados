@@ -23,8 +23,18 @@ create table if not exists public.envelope_transactions (
   tipo text not null check (tipo in ('gasto', 'deposito', 'resgate')),
   descricao text not null default '',
   data date not null default current_date,
+  -- Gastos recorrentes/parcelados: valor e o da parcela, data e a base.
+  recorrencia text not null default 'unica' check (recorrencia in ('unica', 'mensal')),
+  quantidade_parcelas integer null check (quantidade_parcelas is null or quantidade_parcelas > 0),
   created_at timestamptz not null default now()
 );
+
+-- Se voce ja tinha rodado este script antes, os alters abaixo adicionam as
+-- colunas novas sem perder dados (sao ignorados se as colunas ja existem).
+alter table public.envelope_transactions
+  add column if not exists recorrencia text not null default 'unica';
+alter table public.envelope_transactions
+  add column if not exists quantidade_parcelas integer null;
 
 create index if not exists idx_envelopes_user_id on public.envelopes (user_id);
 create index if not exists idx_envelope_tx_envelope_id on public.envelope_transactions (envelope_id);

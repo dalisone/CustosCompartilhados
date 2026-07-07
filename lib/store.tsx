@@ -105,6 +105,8 @@ type EnvelopeTransactionRow = {
   tipo: "gasto" | "deposito" | "resgate";
   descricao: string;
   data: string;
+  recorrencia: "mensal" | "unica";
+  quantidade_parcelas: number | null;
   created_at: string;
 };
 
@@ -177,6 +179,8 @@ function mapEnvelopeTransactionRow(row: EnvelopeTransactionRow): EnvelopeTransac
     tipo: row.tipo,
     descricao: row.descricao,
     data: row.data,
+    recorrencia: row.recorrencia ?? "unica",
+    quantidadeParcelas: row.quantidade_parcelas,
     createdAt: row.created_at,
   };
 }
@@ -593,6 +597,8 @@ export function FinanceProvider({ children }: PropsWithChildren) {
           tipo: input.tipo,
           descricao: input.descricao,
           data: toDateOnly(input.data),
+          recorrencia: input.recorrencia,
+          quantidade_parcelas: input.quantidadeParcelas ?? null,
         })
         .select("*")
         .single();

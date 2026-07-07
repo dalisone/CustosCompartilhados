@@ -66,17 +66,26 @@ export function resolveMonthExpenses(expenses: Expense[], month: string): Expens
   );
 }
 
-export function getParcelaInfo(expense: Expense, month: string) {
-  if (expense.recorrencia !== "mensal" || !expense.quantidadeParcelas || expense.quantidadeParcelas <= 0) {
+export function parcelaLabel(
+  recorrencia: "mensal" | "unica",
+  dataBase: string,
+  quantidadeParcelas: number | null | undefined,
+  month: string,
+): string | null {
+  if (recorrencia !== "mensal" || !quantidadeParcelas || quantidadeParcelas <= 0) {
     return null;
   }
 
-  const startMonth = expense.dataReferencia.slice(0, 7);
+  const startMonth = dataBase.slice(0, 7);
   const elapsed = monthDiff(startMonth, month);
   if (elapsed < 0) return `Inicia em ${startMonth}`;
 
-  const parcelaAtual = Math.min(elapsed + 1, expense.quantidadeParcelas);
-  return `${parcelaAtual}/${expense.quantidadeParcelas} parcelas`;
+  const parcelaAtual = Math.min(elapsed + 1, quantidadeParcelas);
+  return `${parcelaAtual}/${quantidadeParcelas} parcelas`;
+}
+
+export function getParcelaInfo(expense: Expense, month: string) {
+  return parcelaLabel(expense.recorrencia, expense.dataReferencia, expense.quantidadeParcelas, month);
 }
 
 function addMonths(month: string, delta: number): string {
@@ -85,6 +94,13 @@ function addMonths(month: string, delta: number): string {
   const nextYear = Math.floor(total / 12);
   const nextMonth = (total % 12) + 1;
   return `${nextYear}-${String(nextMonth).padStart(2, "0")}`;
+}
+
+export function isEnvelopeTransactionActiveInMonth(
+  tx: EnvelopeTransaction,
+  month: string,
+): boolean {
+  return isEntryActiveInMonth(tx.recorrencia, tx.data, month, true, tx.quantidadeParcelas);
 }
 
 export interface EnvelopeSummary {
@@ -138,17 +154,42 @@ export function buildEnvelopeSummary(
   for (const tx of transactions) {
     if (tx.envelopeId !== envelope.id) continue;
     const txMonth = tx.data.slice(0, 7);
-    if (txMonth > month) continue;
-    const isCurrent = txMonth === month;
-    if (tx.tipo === "deposito") {
-      if (isCurrent) depositosMes += tx.valor;
-      else depositosAnteriores += tx.valor;
-    } else if (tx.tipo === "gasto") {
-      if (isCurrent) gastosMes += tx.valor;
-      else gastosAnteriores += tx.valor;
+
+    // Valor lancado no mes selecionado (para recorrente, a parcela do mes).
+    const valorMes = isEntryActiveInMonth(
+      tx.recorrencia,
+      tx.data,
+      month,
+      true,
+      tx.quantidadeParcelas,
+    )
+      ? tx.valor
+      : 0;
+
+    // Total lancado em meses anteriores ao selecionado.
+    let ocorrenciasAnteriores = 0;
+    if (tx.recorrencia === "unica") {
+      ocorrenciasAnteriores = txMonth < month ? 1 : 0;
     } else {
-      if (isCurrent) resgatesMes += tx.valor;
-      else resgatesAnteriores += tx.valor;
+      const elapsed = monthDiff(txMonth, month);
+      if (elapsed > 0) {
+        ocorrenciasAnteriores =
+          tx.quantidadeParcelas && tx.quantidadeParcelas > 0
+            ? Math.min(elapsed, tx.quantidadeParcelas)
+            : elapsed;
+      }
+    }
+    const valorAnterior = ocorrenciasAnteriores * tx.valor;
+
+    if (tx.tipo === "deposito") {
+      depositosMes += valorMes;
+      depositosAnteriores += valorAnterior;
+    } else if (tx.tipo === "gasto") {
+      gastosMes += valorMes;
+      gastosAnteriores += valorAnterior;
+    } else {
+      resgatesMes += valorMes;
+      resgatesAnteriores += valorAnterior;
     }
   }
 

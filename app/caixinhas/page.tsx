@@ -2,9 +2,15 @@
 
 import { FormEvent, useState } from "react";
 import { AppShell, Card } from "@/components/app-shell";
-import { buildEnvelopeSummary, currencyFormatter, toMonth } from "@/lib/finance";
+import {
+  buildEnvelopeSummary,
+  currencyFormatter,
+  isEnvelopeTransactionActiveInMonth,
+  parcelaLabel,
+  toMonth,
+} from "@/lib/finance";
 import { useFinance } from "@/lib/store";
-import { Envelope, EnvelopeTransactionType } from "@/lib/types";
+import { Envelope, EnvelopeTransactionType, Recurrence } from "@/lib/types";
 
 function todayISO(): string {
   const now = new Date();
@@ -45,6 +51,8 @@ export default function CaixinhasPage() {
   const [movValor, setMovValor] = useState("");
   const [movDescricao, setMovDescricao] = useState("");
   const [movData, setMovData] = useState(todayISO());
+  const [movRecorrencia, setMovRecorrencia] = useState<Recurrence>("unica");
+  const [movParcelas, setMovParcelas] = useState("");
 
   const month = state.selectedMonth;
   const myExpenses = state.expenses.filter(
@@ -105,6 +113,8 @@ export default function CaixinhasPage() {
     setMovValor("");
     setMovDescricao("");
     setMovData(month === toMonth() ? todayISO() : `${month}-01`);
+    setMovRecorrencia("unica");
+    setMovParcelas("");
   }
 
   function handleMovementSubmit(event: FormEvent<HTMLFormElement>, livreParaResgate: number) {
@@ -122,12 +132,21 @@ export default function CaixinhasPage() {
       return;
     }
 
+    const isRecurringGasto = movement.tipo === "gasto" && movRecorrencia === "mensal";
+    const parsedParcelas =
+      isRecurringGasto && movParcelas.trim() ? Number(movParcelas) : null;
+
     addEnvelopeTransaction({
       envelopeId: movement.envelopeId,
       valor: parsedValue,
       tipo: movement.tipo,
       descricao: movDescricao.trim(),
       data: movData,
+      recorrencia: isRecurringGasto ? "mensal" : "unica",
+      quantidadeParcelas:
+        parsedParcelas && !Number.isNaN(parsedParcelas) && parsedParcelas > 0
+          ? parsedParcelas
+          : null,
     });
     setMovement(null);
   }
@@ -247,7 +266,9 @@ export default function CaixinhasPage() {
                   month,
                 );
                 const monthTransactions = state.envelopeTransactions.filter(
-                  (tx) => tx.envelopeId === envelope.id && tx.data.slice(0, 7) === month,
+                  (tx) =>
+                    tx.envelopeId === envelope.id &&
+                    isEnvelopeTransactionActiveInMonth(tx, month),
                 );
                 const metaProgress = envelope.metaValor
                   ? Math.max(0, Math.min(100, (summary.saldoAtual / envelope.metaValor) * 100))
@@ -399,7 +420,11 @@ export default function CaixinhasPage() {
                             className="rounded-md border border-border bg-panelAlt px-3 py-2 text-sm"
                             min={0}
                             onChange={(event) => setMovValor(event.target.value)}
-                            placeholder="Valor"
+                            placeholder={
+                              movement.tipo === "gasto" && movRecorrencia === "mensal"
+                                ? "Valor da parcela"
+                                : "Valor"
+                            }
                             required
                             step="0.01"
                             type="number"
@@ -412,6 +437,46 @@ export default function CaixinhasPage() {
                             value={movData}
                           />
                         </div>
+                        {movement.tipo === "gasto" ? (
+                          <div className="grid grid-cols-2 gap-2">
+                            <select
+                              className="rounded-md border border-border bg-panelAlt px-3 py-2 text-sm"
+                              onChange={(event) =>
+                                setMovRecorrencia(event.target.value as Recurrence)
+                              }
+                              value={movRecorrencia}
+                            >
+                              <option value="unica">Gasto unico</option>
+                              <option value="mensal">Recorrente / parcelado</option>
+                            </select>
+                            {movRecorrencia === "mensal" ? (
+                              <input
+                                className="rounded-md border border-border bg-panelAlt px-3 py-2 text-sm"
+                                min={1}
+                                onChange={(event) => setMovParcelas(event.target.value)}
+                                placeholder="Parcelas (vazio = sem fim)"
+                                type="number"
+                                value={movParcelas}
+                              />
+                            ) : null}
+                          </div>
+                        ) : null}
+                        {movement.tipo === "gasto" &&
+                        movRecorrencia === "mensal" &&
+                        movValor.trim() &&
+                        movParcelas.trim() ? (
+                          <p className="text-xs text-muted">
+                            Total do parcelamento:{" "}
+                            <strong className="text-text">
+                              {currencyFormatter.format(
+                                (Number(movValor.replace(",", ".")) || 0) *
+                                  (Number(movParcelas) || 0),
+                              )}
+                            </strong>{" "}
+                            ({movParcelas}x de{" "}
+                            {currencyFormatter.format(Number(movValor.replace(",", ".")) || 0)})
+                          </p>
+                        ) : null}
                         <input
                           className="w-full rounded-md border border-border bg-panelAlt px-3 py-2 text-sm"
                           onChange={(event) => setMovDescricao(event.target.value)}
@@ -438,7 +503,17 @@ export default function CaixinhasPage() {
 
                     {monthTransactions.length > 0 ? (
                       <div className="mt-3 max-h-48 space-y-1 overflow-y-auto pr-1">
-                        {monthTransactions.map((tx) => (
+                        {monthTransactions.map((tx) => {
+                          const parcelaInfo =
+                            tx.recorrencia === "mensal"
+                              ? parcelaLabel(
+                                  tx.recorrencia,
+                                  tx.data,
+                                  tx.quantidadeParcelas,
+                                  month,
+                                ) ?? "Mensal"
+                              : null;
+                          return (
                           <div
                             className="flex items-center justify-between gap-2 rounded-md border border-border bg-panel px-3 py-2 text-sm"
                             key={tx.id}
@@ -447,6 +522,9 @@ export default function CaixinhasPage() {
                               {tx.data.slice(8, 10)}/{tx.data.slice(5, 7)} |{" "}
                               {movementLabels[tx.tipo]}
                               {tx.descricao ? ` | ${tx.descricao}` : ""}
+                              {parcelaInfo ? (
+                                <span className="text-accent"> | {parcelaInfo}</span>
+                              ) : null}
                             </span>
                             <span className="flex shrink-0 items-center gap-2">
                               <strong
@@ -461,7 +539,11 @@ export default function CaixinhasPage() {
                                 <button
                                   className="text-xs text-muted transition hover:text-expense"
                                   onClick={() => {
-                                    if (window.confirm("Remover esta movimentacao?")) {
+                                    const message =
+                                      tx.recorrencia === "mensal"
+                                        ? "Este gasto e recorrente: remover apaga todas as parcelas (passadas e futuras). Continuar?"
+                                        : "Remover esta movimentacao?";
+                                    if (window.confirm(message)) {
                                       deleteEnvelopeTransaction(tx.id);
                                     }
                                   }}
@@ -472,7 +554,8 @@ export default function CaixinhasPage() {
                               ) : null}
                             </span>
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     ) : (
                       <p className="mt-3 text-xs text-muted">

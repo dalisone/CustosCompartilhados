@@ -60,6 +60,8 @@ export interface EnvelopeTransaction {
   tipo: EnvelopeTransactionType;
   descricao: string;
   data: string;
+  recorrencia: Recurrence;
+  quantidadeParcelas?: number | null;
   createdAt: string;
 }
 
